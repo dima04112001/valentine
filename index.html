@@ -189,15 +189,19 @@
   const PLACES = [
     { id: "cafe", emoji: "☕", label: "Уютное кафе", desc: "Тепло, вкусно и романтично" },
     { id: "park", emoji: "🌿", label: "Прогулка в парке", desc: "Свежий воздух и красивые виды" },
-    { id: "theater", emoji: "🎭", label: "Театр", desc: "Культурный вечер вдвоём" },
+    { id: "theater", emoji: "🌊", label: "Набережная", desc: "Закат, волны и разговоры" },
     { id: "cinema", emoji: "🎬", label: "Кино", desc: "Попкорн и хороший фильм" },
+    { id: "drive",      emoji: "🚗", label: "Покататься на машинке", desc: "Музыка, ветер и ты" },
   ];
 
   const FOODS = [
-    { id: "sushi", emoji: "🍣", label: "Суши / Роллы" },
-    { id: "pizza", emoji: "🍕", label: "Пицца" },
-    { id: "pasta", emoji: "🍝", label: "Паста" },
-    { id: "burgers", emoji: "🍔", label: "Бургеры" },
+  { id: "icecream",  emoji: "🍦", label: "Мороженое",       desc: "Сладкое и нежное" },
+  { id: "coffee",    emoji: "☕", label: "Кофе с пирожным",  desc: "Уютно и тепло" },
+  { id: "bun",       emoji: "🥐", label: "Булочка из Ярче",  desc: "Свежая выпечка" },
+  { id: "shaurma",   emoji: "🌯", label: "Шаурма",           desc: "Сочная и сытная" },
+  { id: "sushi",     emoji: "🍣", label: "Суши / Роллы",     desc: "Лёгкий ужин" },
+  { id: "blini",     emoji: "🥞", label: "Сибирские блины",   desc: "С мёдом и ягодой" },
+  { id: "pelmeni",   emoji: "🥟", label: "Пельмени",         desc: "По-томски, с пылу с жару" },
   ];
 
   const HEARTS = ["💗", "💖", "💝", "💓", "🌸", "✨", "🎀"];
@@ -229,18 +233,26 @@
       setTimeout(() => setHearts(h => h.filter(x => !newH.find(n => n.id === x.id))), 3000);
     }
 
-    function runAway() {
-      const container = containerRef.current;
-      if (!container) return;
-      const rect = container.getBoundingClientRect();
-      const margin = 60;
-      setNoPos({
-        x: margin + Math.random() * (rect.width - margin * 2),
-        y: margin + Math.random() * (rect.height - margin * 2),
-      });
-      setNoCount(c => c + 1);
-    }
-
+   function runAway() {
+  const btn = noBtnRef.current;
+  if (!btn) return;
+  
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const btnWidth = btn.offsetWidth || 100;
+  const btnHeight = btn.offsetHeight || 50;
+  const margin = 20; // отступ от краёв
+  
+  // Случайная позиция, но с учётом размеров кнопки, чтобы не вылезала
+  const maxX = viewportWidth - btnWidth - margin;
+  const maxY = viewportHeight - btnHeight - margin;
+  
+  setNoPos({
+    x: margin + Math.random() * maxX,
+    y: margin + Math.random() * maxY,
+  });
+  setNoCount(c => c + 1);
+}
     async function handleFinish() {
       const data = {
         date,
