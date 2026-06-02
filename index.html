@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Нажми на меня  💗</title>
+  <title>Нажми на меня 💗</title>
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: Georgia, serif; overflow-x: hidden; }
-    
+
     .container {
       min-height: 100vh;
       background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 40%, #f8bbd9 100%);
@@ -16,7 +16,7 @@
       position: relative;
       padding: 20px;
     }
-    
+
     .card {
       background: rgba(255, 255, 255, 0.7);
       backdrop-filter: blur(20px);
@@ -28,36 +28,36 @@
       box-shadow: 0 20px 60px rgba(233, 30, 140, 0.15);
       animation: fadeIn 0.6s ease;
     }
-    
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.06); }
     }
-    
+
     @keyframes floatUp {
       0% { transform: translateY(0) scale(1); opacity: 1; }
       100% { transform: translateY(-80px) scale(1.3); opacity: 0; }
     }
-    
+
     .heart {
       position: fixed;
       pointer-events: none;
       animation: floatUp 3s ease-out forwards;
       z-index: 1000;
     }
-    
+
     h1, h2 {
       font-family: 'Playfair Display', Georgia, serif;
       font-style: italic;
       color: #880e4f;
       line-height: 1.2;
     }
-    
+
     .yes-btn {
       background: linear-gradient(135deg, #e91e8c, #f06292);
       color: white;
@@ -72,11 +72,11 @@
       animation: pulse 2s infinite;
       transition: transform 0.15s;
     }
-    
+
     .yes-btn:hover {
       transform: scale(1.1);
     }
-    
+
     .no-btn {
       background: white;
       color: #f48fb1;
@@ -88,13 +88,7 @@
       transition: all 0.2s;
       white-space: nowrap;
     }
-    
-    .no-btn.fixed {
-      position: fixed;
-      z-index: 100;
-      transform: translate(-50%, -50%);
-    }
-    
+
     .choice-card {
       cursor: pointer;
       transition: all 0.2s;
@@ -104,17 +98,17 @@
       padding: 18px 12px;
       box-shadow: 0 4px 16px rgba(233, 30, 140, 0.1);
     }
-    
+
     .choice-card:hover {
       transform: translateY(-4px);
       border-color: #f48fb1;
     }
-    
+
     .choice-card.selected {
       border-color: #e91e8c;
       background: #fce4ec;
     }
-    
+
     .next-btn {
       background: linear-gradient(135deg, #e91e8c, #f06292);
       color: white;
@@ -127,24 +121,24 @@
       cursor: pointer;
       box-shadow: 0 6px 20px rgba(233, 30, 140, 0.3);
     }
-    
+
     .next-btn:disabled {
       background: #f8bbd9;
       cursor: not-allowed;
       box-shadow: none;
     }
-    
+
     .next-btn:not(:disabled):hover {
       transform: scale(1.05);
     }
-    
+
     .grid-2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
       margin-bottom: 28px;
     }
-    
+
     input[type="date"], input[type="time"] {
       border: 2px solid #f48fb1;
       border-radius: 12px;
@@ -156,14 +150,14 @@
       font-family: Georgia, serif;
       transition: border-color 0.2s;
     }
-    
+
     input:focus {
       border-color: #e91e8c;
     }
-    
+
     .emoji-big { font-size: 64px; margin-bottom: 8px; }
     .emoji-med { font-size: 56px; margin-bottom: 8px; }
-    
+
     .subtitle {
       font-weight: 300;
       color: #c2185b;
@@ -178,30 +172,30 @@
 <script type="text/babel">
   const { useState, useRef, useEffect } = React;
 
-  // ⚠️ ВСТАВЬ СЮДА СВОИ ДАННЫЕ ИЗ EMAILJS!
-  const EMAILJS_SERVICE_ID  = "service_q26zn0s";   // замени
-  const EMAILJS_TEMPLATE_ID = "template_cnggbd6";  // замени
-  const EMAILJS_PUBLIC_KEY  = "eOKft_HmrUTO0yAEp";   // замени
+  // ⚠️ Твои данные из EmailJS
+  const EMAILJS_SERVICE_ID  = "service_q26zn0s";
+  const EMAILJS_TEMPLATE_ID = "template_cnggbd6";
+  const EMAILJS_PUBLIC_KEY  = "eOKft_HmrUTO0yAEp";
   const TO_EMAIL            = "dima2001n@gmail.com";
 
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
   const PLACES = [
-    { id: "cafe", emoji: "☕", label: "Уютное кафе", desc: "Тепло, вкусно и романтично" },
-    { id: "park", emoji: "🌿", label: "Прогулка в парке", desc: "Свежий воздух и красивые виды" },
-    { id: "theater", emoji: "🌊", label: "Набережная", desc: "Закат, волны и разговоры" },
-    { id: "cinema", emoji: "🎬", label: "Кино", desc: "Попкорн и хороший фильм" },
-    { id: "drive",      emoji: "🚗", label: "Покататься на машинке", desc: "Музыка, ветер и ты" },
+    { id: "cafe",    emoji: "☕", label: "Уютное кафе",      desc: "Тепло, вкусно и романтично" },
+    { id: "park",    emoji: "🌿", label: "Прогулка в парке", desc: "Свежий воздух и красивые виды" },
+    { id: "theater", emoji: "🌊", label: "Набережная",       desc: "Закат, волны и разговоры" },
+    { id: "cinema",  emoji: "🎬", label: "Кино",             desc: "Попкорн и хороший фильм" },
+    { id: "drive",   emoji: "🚗", label: "Покататься на машинке", desc: "Музыка, ветер и ты" },
   ];
 
   const FOODS = [
-  { id: "icecream",  emoji: "🍦", label: "Мороженое",       desc: "Сладкое и нежное" },
-  { id: "coffee",    emoji: "☕", label: "Кофе с пирожным",  desc: "Уютно и тепло" },
-  { id: "bun",       emoji: "🥐", label: "Булочка из Ярче",  desc: "Свежая выпечка" },
-  { id: "shaurma",   emoji: "🌯", label: "Шаурма",           desc: "Сочная и сытная" },
-  { id: "sushi",     emoji: "🍣", label: "Суши / Роллы",     desc: "Лёгкий ужин" },
-  { id: "blini",     emoji: "🥞", label: "Сибирские блины",   desc: "С мёдом и ягодой" },
-  { id: "pelmeni",   emoji: "🥟", label: "Пельмени",         desc: "По-томски, с пылу с жару" },
+    { id: "icecream", emoji: "🍦", label: "Мороженое",       desc: "Сладкое и нежное" },
+    { id: "coffee",   emoji: "☕", label: "Кофе с пирожным",  desc: "Уютно и тепло" },
+    { id: "bun",      emoji: "🥐", label: "Булочка из Ярче",  desc: "Свежая выпечка" },
+    { id: "shaurma",  emoji: "🌯", label: "Шаурма",           desc: "Сочная и сытная" },
+    { id: "sushi",    emoji: "🍣", label: "Суши / Роллы",     desc: "Лёгкий ужин" },
+    { id: "blini",    emoji: "🥞", label: "Сибирские блины",   desc: "С мёдом и ягодой" },
+    { id: "pelmeni",  emoji: "🥟", label: "Пельмени",         desc: "По-томски, с пылу с жару" },
   ];
 
   const HEARTS = ["💗", "💖", "💝", "💓", "🌸", "✨", "🎀"];
@@ -233,46 +227,21 @@
       setTimeout(() => setHearts(h => h.filter(x => !newH.find(n => n.id === x.id))), 3000);
     }
 
-  function runAway() {
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
+    function runAway() {
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const btnWidth = 140;
+      const btnHeight = 50;
+      const margin = 30;
+      const maxX = viewportWidth - btnWidth - margin;
+      const maxY = viewportHeight - btnHeight - margin;
+      const randomX = margin + Math.random() * maxX;
+      const randomY = margin + Math.random() * maxY;
 
-  // Примерные размеры кнопки (можно чуть увеличить, если кнопка шире)
-  const btnWidth = 140;
-  const btnHeight = 50;
-  const margin = 30; // отступ от краёв, чтобы не прилипала
+      setNoPos({ x: randomX, y: randomY });
+      setNoCount(c => c + 1);
+    }
 
-  // Максимальные координаты, чтобы кнопка не вылезала за экран
-  const maxX = viewportWidth - btnWidth - margin;
-  const maxY = viewportHeight - btnHeight - margin;
-
-  const randomX = margin + Math.random() * maxX;
-  const randomY = margin + Math.random() * maxY;
-
-  setNoPos({
-    x: randomX,
-    y: randomY,
-  });
-
-  setNoCount(c => c + 1);
-}
-  
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-  const btnWidth = btn.offsetWidth || 100;
-  const btnHeight = btn.offsetHeight || 50;
-  const margin = 20; // отступ от краёв
-  
-  // Случайная позиция, но с учётом размеров кнопки, чтобы не вылезала
-  const maxX = viewportWidth - btnWidth - margin;
-  const maxY = viewportHeight - btnHeight - margin;
-  
-  setNoPos({
-    x: margin + Math.random() * maxX,
-    y: margin + Math.random() * maxY,
-  });
-  setNoCount(c => c + 1);
-}
     async function handleFinish() {
       const data = {
         date,
@@ -307,7 +276,6 @@
           }}>{h.char}</div>
         ))}
 
-        {/* PAGE 0 - Главная */}
         {page === 0 && (
           <div className="card">
             <div className="emoji-big">💌</div>
@@ -315,27 +283,27 @@
               Пойдёшь со мной<br />на свидание?
             </h1>
             <p className="subtitle">Подумай хорошенько ✨</p>
-            
+
             <div style={{ display: "flex", gap: 20, justifyContent: "center", flexWrap: "wrap", minHeight: 80 }}>
               <button className="yes-btn" onClick={() => { spawnHearts(8); setPage(1); }}>
                 Да! 💗
               </button>
-              
+
               <button
-          className={`no-btn ${noPos.x !== null ? 'fixed' : ''}`}
-          style={noPos.x !== null ? { 
-            position: "fixed",
-            left: noPos.x + "px", 
-            top: noPos.y + "px",
-            zIndex: 100,
-            transform: "translate(-50%, -50%)",
-            whiteSpace: "nowrap"
-          } : {}}
-          onMouseEnter={runAway}
-          onClick={runAway}
-        >
-          {noMessages[noCount % noMessages.length]}
-</button>
+                style={noPos.x !== null ? {
+                  position: "fixed",
+                  left: noPos.x + "px",
+                  top: noPos.y + "px",
+                  zIndex: 100,
+                  transform: "translate(-50%, -50%)",
+                  whiteSpace: "nowrap"
+                } : {}}
+                className={`no-btn`}
+                onMouseEnter={runAway}
+                onClick={runAway}
+              >
+                {noMessages[noCount % noMessages.length]}
+              </button>
             </div>
 
             {noCount > 2 && (
@@ -346,7 +314,6 @@
           </div>
         )}
 
-        {/* PAGE 1 - Дата и время */}
         {page === 1 && (
           <div className="card">
             <div className="emoji-med">🗓️</div>
@@ -363,7 +330,6 @@
           </div>
         )}
 
-        {/* PAGE 2 - Место */}
         {page === 2 && (
           <div className="card">
             <div className="emoji-med">📍</div>
@@ -385,7 +351,6 @@
           </div>
         )}
 
-        {/* PAGE 3 - Еда */}
         {page === 3 && (
           <div className="card">
             <div className="emoji-med">🍽️</div>
@@ -406,7 +371,6 @@
           </div>
         )}
 
-        {/* PAGE 4 - Готово */}
         {page === 4 && (
           <div className="card">
             <div style={{ fontSize: 72, marginBottom: 12, animation: "pulse 1.5s infinite" }}>🎀</div>
