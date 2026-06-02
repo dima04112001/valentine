@@ -322,13 +322,20 @@
               </button>
               
               <button
-                className={`no-btn ${noPos.x !== null ? 'fixed' : ''}`}
-                style={noPos.x !== null ? { left: noPos.x, top: noPos.y } : {}}
-                onMouseEnter={runAway}
-                onClick={runAway}
-              >
-                {noMessages[noCount % noMessages.length]}
-              </button>
+          className={`no-btn ${noPos.x !== null ? 'fixed' : ''}`}
+          style={noPos.x !== null ? { 
+            position: "fixed",
+            left: noPos.x + "px", 
+            top: noPos.y + "px",
+            zIndex: 100,
+            transform: "translate(-50%, -50%)",
+            whiteSpace: "nowrap"
+          } : {}}
+          onMouseEnter={runAway}
+          onClick={runAway}
+        >
+          {noMessages[noCount % noMessages.length]}
+</button>
             </div>
 
             {noCount > 2 && (
