@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Приглашение на свидание 💗</title>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: Georgia, serif; overflow-x: hidden; }
+    
+    .container {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 40%, #f8bbd9 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      padding: 20px;
+    }
+    
+    .card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      border-radius: 30px;
+      padding: 40px 32px;
+      max-width: 460px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(233, 30, 140, 0.15);
+      animation: fadeIn 0.6s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-80px) scale(1.3); opacity: 0; }
+    }
+    
+    .heart {
+      position: fixed;
+      pointer-events: none;
+      animation: floatUp 3s ease-out forwards;
+      z-index: 1000;
+    }
+    
+    h1, h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      color: #880e4f;
+      line-height: 1.2;
+    }
+    
+    .yes-btn {
+      background: linear-gradient(135deg, #e91e8c, #f06292);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 16px 40px;
+      font-size: 20px;
+      font-family: Georgia, serif;
+      font-style: italic;
+      cursor: pointer;
+      box-shadow: 0 8px 24px rgba(233, 30, 140, 0.35);
+      animation: pulse 2s infinite;
+      transition: transform 0.15s;
+    }
+    
+    .yes-btn:hover {
+      transform: scale(1.1);
+    }
+    
+    .no-btn {
+      background: white;
+      color: #f48fb1;
+      border: 2px solid #f48fb1;
+      border-radius: 50px;
+      padding: 14px 32px;
+      font-size: 17px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    
+    .no-btn.fixed {
+      position: fixed;
+      z-index: 100;
+      transform: translate(-50%, -50%);
+    }
+    
+    .choice-card {
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      background: white;
+      border-radius: 16px;
+      padding: 18px 12px;
+      box-shadow: 0 4px 16px rgba(233, 30, 140, 0.1);
+    }
+    
+    .choice-card:hover {
+      transform: translateY(-4px);
+      border-color: #f48fb1;
+    }
+    
+    .choice-card.selected {
+      border-color: #e91e8c;
+      background: #fce4ec;
+    }
+    
+    .next-btn {
+      background: linear-gradient(135deg, #e91e8c, #f06292);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 14px 40px;
+      font-size: 18px;
+      font-family: Georgia, serif;
+      font-style: italic;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(233, 30, 140, 0.3);
+    }
+    
+    .next-btn:disabled {
+      background: #f8bbd9;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    
+    .next-btn:not(:disabled):hover {
+      transform: scale(1.05);
+    }
+    
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    
+    input[type="date"], input[type="time"] {
+      border: 2px solid #f48fb1;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 18px;
+      width: 100%;
+      max-width: 280px;
+      outline: none;
+      font-family: Georgia, serif;
+      transition: border-color 0.2s;
+    }
+    
+    input:focus {
+      border-color: #e91e8c;
+    }
+    
+    .emoji-big { font-size: 64px; margin-bottom: 8px; }
+    .emoji-med { font-size: 56px; margin-bottom: 8px; }
+    
+    .subtitle {
+      font-weight: 300;
+      color: #c2185b;
+      margin-bottom: 32px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="root"></div>
+
+<script type="text/babel">
+  const { useState, useRef, useEffect } = React;
+
+  // ⚠️ ВСТАВЬ СЮДА СВОИ ДАННЫЕ ИЗ EMAILJS!
+  const EMAILJS_SERVICE_ID  = "service_8bx1i7c";   // замени
+  const EMAILJS_TEMPLATE_ID = "template_cnggbd6";  // замени
+  const EMAILJS_PUBLIC_KEY  = "eOKft_HmrUTO0yAEp";   // замени
+  const TO_EMAIL            = "dima2001n@gmail.com";
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
+  const PLACES = [
+    { id: "cafe", emoji: "☕", label: "Уютное кафе", desc: "Тепло, вкусно и романтично" },
+    { id: "park", emoji: "🌿", label: "Прогулка в парке", desc: "Свежий воздух и красивые виды" },
+    { id: "theater", emoji: "🎭", label: "Театр", desc: "Культурный вечер вдвоём" },
+    { id: "cinema", emoji: "🎬", label: "Кино", desc: "Попкорн и хороший фильм" },
+  ];
+
+  const FOODS = [
+    { id: "sushi", emoji: "🍣", label: "Суши / Роллы" },
+    { id: "pizza", emoji: "🍕", label: "Пицца" },
+    { id: "pasta", emoji: "🍝", label: "Паста" },
+    { id: "burgers", emoji: "🍔", label: "Бургеры" },
+  ];
+
+  const HEARTS = ["💗", "💖", "💝", "💓", "🌸", "✨", "🎀"];
+
+  function App() {
+    const [page, setPage] = useState(0);
+    const [noPos, setNoPos] = useState({ x: null, y: null });
+    const [noCount, setNoCount] = useState(0);
+    const [date, setDate] = useState("");
+    const [time, setTime] = useState("");
+    const [place, setPlace] = useState(null);
+    const [food, setFood] = useState(null);
+    const [sending, setSending] = useState(false);
+    const [hearts, setHearts] = useState([]);
+    const containerRef = useRef(null);
+
+    useEffect(() => { spawnHearts(5); }, [page]);
+
+    function spawnHearts(n) {
+      const newH = Array.from({ length: n }, (_, i) => ({
+        id: Date.now() + i,
+        x: Math.random() * 90 + "%",
+        y: Math.random() * 80 + "%",
+        size: (Math.random() * 16 + 14) + "px",
+        opacity: Math.random() * 0.4 + 0.3,
+        char: HEARTS[Math.floor(Math.random() * HEARTS.length)],
+      }));
+      setHearts(h => [...h, ...newH]);
+      setTimeout(() => setHearts(h => h.filter(x => !newH.find(n => n.id === x.id))), 3000);
+    }
+
+    function runAway() {
+      const container = containerRef.current;
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      const margin = 60;
+      setNoPos({
+        x: margin + Math.random() * (rect.width - margin * 2),
+        y: margin + Math.random() * (rect.height - margin * 2),
+      });
+      setNoCount(c => c + 1);
+    }
+
+    async function handleFinish() {
+      const data = {
+        date,
+        time,
+        place: PLACES.find(p => p.id === place)?.label,
+        food: FOODS.find(f => f.id === food)?.label,
+      };
+      setSending(true);
+      try {
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email: TO_EMAIL,
+          date: data.date,
+          time: data.time,
+          place: data.place,
+          food: data.food,
+        });
+      } catch (e) {
+        console.error("Ошибка отправки:", e);
+      }
+      setSending(false);
+      spawnHearts(12);
+      setPage(4);
+    }
+
+    const noMessages = ["Нет 🙅‍♀️", "Неа!", "Не поймаешь!", "Хахаха нет", "Попробуй ещё!", "Лови меня~", "Нееет!"];
+
+    return (
+      <div ref={containerRef} className="container">
+        {hearts.map(h => (
+          <div key={h.id} className="heart" style={{
+            left: h.x, top: h.y, fontSize: h.size, opacity: h.opacity
+          }}>{h.char}</div>
+        ))}
+
+        {/* PAGE 0 - Главная */}
+        {page === 0 && (
+          <div className="card">
+            <div className="emoji-big">💌</div>
+            <h1 style={{ fontSize: "clamp(28px, 6vw, 42px)", margin: "0 0 12px" }}>
+              Пойдёшь со мной<br />на свидание?
+            </h1>
+            <p className="subtitle">Подумай хорошенько ✨</p>
+            
+            <div style={{ display: "flex", gap: 20, justifyContent: "center", flexWrap: "wrap", minHeight: 80 }}>
+              <button className="yes-btn" onClick={() => { spawnHearts(8); setPage(1); }}>
+                Да! 💗
+              </button>
+              
+              <button
+                className={`no-btn ${noPos.x !== null ? 'fixed' : ''}`}
+                style={noPos.x !== null ? { left: noPos.x, top: noPos.y } : {}}
+                onMouseEnter={runAway}
+                onClick={runAway}
+              >
+                {noMessages[noCount % noMessages.length]}
+              </button>
+            </div>
+
+            {noCount > 2 && (
+              <p style={{ marginTop: 24, color: "#f06292", fontSize: 14, animation: "pulse 0.5s infinite" }}>
+                Кнопка «Нет» не даётся… может, это знак? 😏
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* PAGE 1 - Дата и время */}
+        {page === 1 && (
+          <div className="card">
+            <div className="emoji-med">🗓️</div>
+            <h2 style={{ fontSize: 32, margin: "0 0 8px" }}>Когда тебе удобно?</h2>
+            <p className="subtitle">Выбери дату и время 🌸</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "center", marginBottom: 32 }}>
+              <input type="date" value={date} onChange={e => setDate(e.target.value)}
+                min={new Date().toISOString().split("T")[0]} />
+              <input type="time" value={time} onChange={e => setTime(e.target.value)} />
+            </div>
+            <button className="next-btn" disabled={!date || !time} onClick={() => setPage(2)}>
+              Дальше →
+            </button>
+          </div>
+        )}
+
+        {/* PAGE 2 - Место */}
+        {page === 2 && (
+          <div className="card">
+            <div className="emoji-med">📍</div>
+            <h2 style={{ fontSize: 32, margin: "0 0 8px" }}>Куда отправимся?</h2>
+            <p className="subtitle">Выбери место для нашего свидания</p>
+            <div className="grid-2">
+              {PLACES.map(p => (
+                <div key={p.id} className={`choice-card ${place === p.id ? "selected" : ""}`}
+                  onClick={() => setPlace(p.id)}>
+                  <div style={{ fontSize: 32, marginBottom: 6 }}>{p.emoji}</div>
+                  <div style={{ fontSize: 15, color: "#880e4f", fontWeight: 700 }}>{p.label}</div>
+                  <div style={{ fontSize: 12, color: "#c2185b", marginTop: 4 }}>{p.desc}</div>
+                </div>
+              ))}
+            </div>
+            <button className="next-btn" disabled={!place} onClick={() => setPage(3)}>
+              Дальше →
+            </button>
+          </div>
+        )}
+
+        {/* PAGE 3 - Еда */}
+        {page === 3 && (
+          <div className="card">
+            <div className="emoji-med">🍽️</div>
+            <h2 style={{ fontSize: 32, margin: "0 0 8px" }}>Что будем есть?</h2>
+            <p className="subtitle">Твой любимый вкус вечера 🍴</p>
+            <div className="grid-2">
+              {FOODS.map(f => (
+                <div key={f.id} className={`choice-card ${food === f.id ? "selected" : ""}`}
+                  onClick={() => setFood(f.id)}>
+                  <div style={{ fontSize: 36, marginBottom: 8 }}>{f.emoji}</div>
+                  <div style={{ fontSize: 15, color: "#880e4f", fontWeight: 700 }}>{f.label}</div>
+                </div>
+              ))}
+            </div>
+            <button className="next-btn" disabled={!food || sending} onClick={handleFinish}>
+              {sending ? "Отправляем... 💌" : "Готово! 💗"}
+            </button>
+          </div>
+        )}
+
+        {/* PAGE 4 - Готово */}
+        {page === 4 && (
+          <div className="card">
+            <div style={{ fontSize: 72, marginBottom: 12, animation: "pulse 1.5s infinite" }}>🎀</div>
+            <h2 style={{ fontSize: "clamp(26px, 6vw, 38px)", margin: "0 0 16px" }}>
+              Ура! Свидание<br />назначено 💗
+            </h2>
+            <div style={{
+              background: "white", borderRadius: 20, padding: 24, marginBottom: 24,
+              boxShadow: "0 8px 32px rgba(233,30,140,0.12)", textAlign: "left"
+            }}>
+              <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                <span>📅</span>
+                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ДАТА</div><div style={{ fontSize: 17, color: "#880e4f", fontWeight: 700 }}>{date}</div></div>
+              </div>
+              <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                <span>⏰</span>
+                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ВРЕМЯ</div><div style={{ fontSize: 17, color: "#880e4f", fontWeight: 700 }}>{time}</div></div>
+              </div>
+              <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
+                <span>📍</span>
+                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>МЕСТО</div><div style={{ fontSize: 17, color: "#880e4f", fontWeight: 700 }}>{PLACES.find(p => p.id === place)?.label}</div></div>
+              </div>
+              <div style={{ display: "flex", gap: 12 }}>
+                <span>🍽️</span>
+                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ЕДА</div><div style={{ fontSize: 17, color: "#880e4f", fontWeight: 700 }}>{FOODS.find(f => f.id === food)?.label}</div></div>
+              </div>
+            </div>
+            <p style={{ color: "#c2185b", fontSize: 15 }}>Жди — скоро увидимся! ✨</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  ReactDOM.render(<App />, document.getElementById("root"));
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+
+</body>
+</html>
