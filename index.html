@@ -233,9 +233,29 @@
       setTimeout(() => setHearts(h => h.filter(x => !newH.find(n => n.id === x.id))), 3000);
     }
 
-   function runAway() {
-  const btn = noBtnRef.current;
-  if (!btn) return;
+  function runAway() {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  // Примерные размеры кнопки (можно чуть увеличить, если кнопка шире)
+  const btnWidth = 140;
+  const btnHeight = 50;
+  const margin = 30; // отступ от краёв, чтобы не прилипала
+
+  // Максимальные координаты, чтобы кнопка не вылезала за экран
+  const maxX = viewportWidth - btnWidth - margin;
+  const maxY = viewportHeight - btnHeight - margin;
+
+  const randomX = margin + Math.random() * maxX;
+  const randomY = margin + Math.random() * maxY;
+
+  setNoPos({
+    x: randomX,
+    y: randomY,
+  });
+
+  setNoCount(c => c + 1);
+}
   
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
