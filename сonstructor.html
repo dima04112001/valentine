@@ -436,75 +436,75 @@
     localStorage.setItem('dateConstructor', JSON.stringify(data));
   }
 
-  function collectData() {
-    return {
-      girlName: document.getElementById('girlName').value,
-      pageTitle: document.getElementById('pageTitle').value,
-      theme: document.getElementById('theme').value,
-      phrases: {
-        main: getPhraseValue('phraseMain', 'phraseMainCustom'),
-        date: getPhraseValue('phraseDate', 'phraseDateCustom'),
-        places: getPhraseValue('phrasePlaces', 'phrasePlacesCustom'),
-        foods: getPhraseValue('phraseFoods', 'phraseFoodsCustom'),
-        final: getPhraseValue('phraseFinal', 'phraseFinalCustom'),
-        caprice: getPhraseValue('phraseCaprice', 'phraseCapriceCustom')
-      },
-      places: getItems('placesContainer').filter(p => p.label.trim() !== ''),
-      foods: getItems('foodsContainer').filter(f => f.label.trim() !== ''),
-      noPhrases: getNoPhrases()
-    };
+ function collectData() {
+  return {
+    girlName: document.getElementById('girlName').value,
+    pageTitle: document.getElementById('pageTitle').value,
+    theme: document.getElementById('theme').value,
+    phrases: {
+      main: getPhraseValue('phraseMain', 'phraseMainCustom'),
+      date: getPhraseValue('phraseDate', 'phraseDateCustom'),
+      places: getPhraseValue('phrasePlaces', 'phrasePlacesCustom'),
+      foods: getPhraseValue('phraseFoods', 'phraseFoodsCustom'),
+      final: getPhraseValue('phraseFinal', 'phraseFinalCustom'),
+      caprice: getPhraseValue('phraseCaprice', 'phraseCapriceCustom')
+    },
+    places: getItems('placesContainer').filter(p => p.label.trim() !== ''),
+    foods: getItems('foodsContainer').filter(f => f.label.trim() !== ''),
+    noPhrases: getNoPhrases()
+  };
+}
+
+ function generateLink() {
+  const data = collectData();
+  const baseUrl = 'https://dima04112001.github.io/valentine/';
+  const params = new URLSearchParams();
+
+  if (data.girlName) params.set('name', data.girlName);
+  if (data.pageTitle) params.set('title', data.pageTitle);
+  if (data.theme !== 'pink') params.set('theme', data.theme);
+
+  // Места
+  const placeLabels = data.places.map(p => p.label);
+  const placeEmojis = data.places.map(p => p.emoji);
+  if (placeLabels.length > 0) {
+    params.set('places', placeLabels.join('|'));
+    params.set('placeEmojis', placeEmojis.join('|'));
   }
 
-  function generateLink() {
-    const data = collectData();
-    const baseUrl = window.location.origin + window.location.pathname.replace('constructor.html', '');
-    
-    const params = new URLSearchParams();
-    if (data.girlName) params.set('name', data.girlName);
-    if (data.pageTitle) params.set('title', data.pageTitle);
-    if (data.theme !== 'pink') params.set('theme', data.theme);
-    
-    // Места
-    const placeLabels = data.places.map(p => p.label);
-    const placeEmojis = data.places.map(p => p.emoji);
-    if (placeLabels.length > 0 && placeLabels[0] !== DEFAULT_PLACES[0].label) {
-      params.set('places', placeLabels.join('|'));
-      params.set('placeEmojis', placeEmojis.join('|'));
-    }
-    
-    // Еда
-    const foodLabels = data.foods.map(f => f.label);
-    const foodEmojis = data.foods.map(f => f.emoji);
-    if (foodLabels.length > 0 && foodLabels[0] !== DEFAULT_FOODS[0].label) {
-      params.set('foods', foodLabels.join('|'));
-      params.set('foodEmojis', foodEmojis.join('|'));
-    }
-    
-    // Фразы «Нет»
-    if (data.noPhrases.length > 0 && data.noPhrases.join(',') !== DEFAULT_NO_PHRASES.join(',')) {
-      params.set('noPhrases', data.noPhrases.join('|'));
-    }
-    
-    // Комплименты
-    Object.keys(data.phrases).forEach(key => {
-      if (data.phrases[key] !== 'default' && data.phrases[key] !== '') {
-        params.set('phrase' + key.charAt(0).toUpperCase() + key.slice(1), data.phrases[key]);
-      }
-    });
-    
-    const queryString = params.toString();
-    const link = queryString ? baseUrl + '?' + queryString : baseUrl;
-    
-    document.getElementById('resultLink').value = link;
-    document.getElementById('result').classList.add('show');
-    document.getElementById('copiedMsg').classList.remove('show');
-    
-    // Скопировать автоматически
-    copyLink();
-    
-    // Сохранить
-    autoSave();
+  // Еда
+  const foodLabels = data.foods.map(f => f.label);
+  const foodEmojis = data.foods.map(f => f.emoji);
+  if (foodLabels.length > 0) {
+    params.set('foods', foodLabels.join('|'));
+    params.set('foodEmojis', foodEmojis.join('|'));
   }
+
+  // Фразы «Нет»
+  if (data.noPhrases.length > 0 && data.noPhrases.join(',') !== DEFAULT_NO_PHRASES.join(',')) {
+    params.set('noPhrases', data.noPhrases.join('|'));
+  }
+
+  // Комплименты
+  Object.keys(data.phrases).forEach(key => {
+    if (data.phrases[key] !== 'default' && data.phrases[key] !== '') {
+      params.set('phrase' + key.charAt(0).toUpperCase() + key.slice(1), data.phrases[key]);
+    }
+  });
+
+  const queryString = params.toString();
+  const link = queryString ? baseUrl + '?' + queryString : baseUrl;
+
+  document.getElementById('resultLink').value = link;
+  document.getElementById('result').classList.add('show');
+  document.getElementById('copiedMsg').classList.remove('show');
+
+  // Скопировать автоматически
+  copyLink();
+
+  // Сохранить
+  autoSave();
+}
 
   function copyLink() {
     const input = document.getElementById('resultLink');
@@ -546,14 +546,31 @@
           
           // Восстановить комплименты
           if (data.phrases) {
-            Object.keys(data.phrases).forEach(key => {
-              const el = document.getElementById('phrase' + key.charAt(0).toUpperCase() + key.slice(1));
-              if (el && data.phrases[key] !== 'default') {
-                el.value = data.phrases[key];
-                el.dispatchEvent(new Event('change'));
-              }
-            });
+  Object.keys(data.phrases).forEach(key => {
+    const selectId = 'phrase' + key.charAt(0).toUpperCase() + key.slice(1);
+    const el = document.getElementById(selectId);
+    if (el) {
+      const val = data.phrases[key];
+      if (val && val !== 'default') {
+        // Проверяем, есть ли такая опция в select
+        const optionExists = Array.from(el.options).some(opt => opt.value === val);
+        if (optionExists) {
+          el.value = val;
+        } else {
+          el.value = 'custom';
+          const customInput = document.getElementById(selectId + 'Custom');
+          if (customInput) {
+            customInput.style.display = 'block';
+            customInput.value = val;
           }
+        }
+        el.dispatchEvent(new Event('change'));
+      } else {
+        el.value = 'default';
+      }
+    }
+  });
+}
           
           autoSave();
           alert('✅ Настройки загружены!');
