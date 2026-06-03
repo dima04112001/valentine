@@ -10,76 +10,25 @@
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: Georgia, serif; overflow-x: hidden; transition: background 0.3s; }
+    body { font-family: Georgia, serif; overflow-x: hidden; }
 
     .container {
       min-height: 100vh;
       display: flex; align-items: center; justify-content: center;
       position: relative;
       padding: 20px;
-      transition: background 0.3s;
+      transition: background 0.5s;
     }
-
-    /* Розовая тема (по умолчанию) */
-    body.pink .container {
-      background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 40%, #f8bbd9 100%);
-    }
-    body.pink .card {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 60px rgba(233, 30, 140, 0.15);
-    }
-    body.pink h1, body.pink h2 { color: #880e4f; }
-    body.pink .subtitle { color: #c2185b; }
-    body.pink .choice-card { background: white; color: #880e4f; }
-    body.pink .choice-card.selected { background: #fce4ec; border-color: #e91e8c; }
-    body.pink .next-btn { background: linear-gradient(135deg, #e91e8c, #f06292); }
-    body.pink .next-btn:disabled { background: #f8bbd9; }
-    body.pink .yes-btn { background: linear-gradient(135deg, #e91e8c, #f06292); }
-    body.pink .no-btn { background: white; color: #f48fb1; border-color: #f48fb1; }
-
-    /* Тёмная тема */
-    body.dark .container {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f0f23 100%);
-    }
-    body.dark .card {
-      background: rgba(20, 20, 40, 0.8);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-    }
-    body.dark h1, body.dark h2 { color: #f06292; }
-    body.dark .subtitle { color: #ccc; }
-    body.dark .choice-card {
-      background: #1a1a2e;
-      color: #eee;
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-    }
-    body.dark .choice-card.selected {
-      background: #2a1a3a;
-      border-color: #e91e8c;
-    }
-    body.dark .choice-card:hover { border-color: #f48fb1; }
-    body.dark .next-btn { background: linear-gradient(135deg, #e91e8c, #c2185b); }
-    body.dark .next-btn:disabled { background: #4a2a3a; }
-    body.dark .yes-btn { background: linear-gradient(135deg, #e91e8c, #c2185b); }
-    body.dark .no-btn {
-      background: #1a1a2e;
-      color: #f48fb1;
-      border-color: #f48fb1;
-    }
-    body.dark input {
-      background: #0f0f23;
-      color: #eee;
-      border-color: #f48fb1;
-    }
-    body.dark .phrase { color: #ccc; }
 
     .card {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
       border-radius: 30px;
       padding: 40px 32px;
       max-width: 460px;
       width: 90%;
       text-align: center;
+      box-shadow: 0 20px 60px rgba(233, 30, 140, 0.15);
       animation: fadeIn 0.6s ease;
     }
 
@@ -87,10 +36,12 @@
       from { opacity: 0; transform: translateY(24px); }
       to { opacity: 1; transform: translateY(0); }
     }
+
     @keyframes pulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.06); }
     }
+
     @keyframes floatUp {
       0% { transform: translateY(0) scale(1); opacity: 1; }
       100% { transform: translateY(-80px) scale(1.3); opacity: 0; }
@@ -106,10 +57,12 @@
     h1, h2 {
       font-family: 'Playfair Display', Georgia, serif;
       font-style: italic;
+      color: #880e4f;
       line-height: 1.2;
     }
 
     .yes-btn {
+      background: linear-gradient(135deg, #e91e8c, #f06292);
       color: white;
       border: none;
       border-radius: 50px;
@@ -122,28 +75,41 @@
       animation: pulse 2s infinite;
       transition: transform 0.15s;
     }
+
     .yes-btn:hover { transform: scale(1.1); }
 
     .no-btn {
+      background: white;
+      color: #f48fb1;
+      border: 2px solid #f48fb1;
       border-radius: 50px;
       padding: 14px 32px;
       font-size: 17px;
       cursor: pointer;
       transition: all 0.2s;
       white-space: nowrap;
-      border: 2px solid;
+      font-family: Georgia, serif;
     }
 
     .choice-card {
       cursor: pointer;
       transition: all 0.2s;
       border: 2px solid transparent;
+      background: white;
       border-radius: 16px;
       padding: 18px 12px;
+      box-shadow: 0 4px 16px rgba(233, 30, 140, 0.1);
     }
-    .choice-card:hover { transform: translateY(-4px); }
+
+    .choice-card:hover { transform: translateY(-4px); border-color: #f48fb1; }
+
+    .choice-card.selected {
+      border-color: #e91e8c;
+      background: #fce4ec;
+    }
 
     .next-btn {
+      background: linear-gradient(135deg, #e91e8c, #f06292);
       color: white;
       border: none;
       border-radius: 50px;
@@ -153,11 +119,15 @@
       font-style: italic;
       cursor: pointer;
       box-shadow: 0 6px 20px rgba(233, 30, 140, 0.3);
+      transition: transform 0.15s;
     }
+
     .next-btn:disabled {
+      background: #f8bbd9;
       cursor: not-allowed;
       box-shadow: none;
     }
+
     .next-btn:not(:disabled):hover { transform: scale(1.05); }
 
     .grid-2 {
@@ -178,6 +148,7 @@
       font-family: Georgia, serif;
       transition: border-color 0.2s;
     }
+
     input:focus { border-color: #e91e8c; }
 
     .emoji-big { font-size: 64px; margin-bottom: 8px; }
@@ -185,25 +156,43 @@
 
     .subtitle {
       font-weight: 300;
-      margin-bottom: 32px;
+      color: #c2185b;
+      margin-bottom: 12px;
     }
 
     .phrase {
       font-style: italic;
-      margin-top: 12px;
-      margin-bottom: 12px;
+      color: #e91e8c;
       font-size: 14px;
+      margin-bottom: 24px;
+      min-height: 20px;
     }
+
+    /* Тёмная тема */
+    body.dark .container {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f0f23 100%);
+    }
+    body.dark .card {
+      background: rgba(26, 26, 46, 0.85);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    }
+    body.dark h1, body.dark h2 { color: #f06292; }
+    body.dark .subtitle { color: #bbb; }
+    body.dark .phrase { color: #f06292; }
+    body.dark .choice-card { background: #1a1a2e; color: #eee; }
+    body.dark .choice-card.selected { background: #2a1a2e; }
+    body.dark .no-btn { background: #1a1a2e; color: #f48fb1; border-color: #f48fb1; }
+    body.dark input { background: #1a1a2e; color: #eee; border-color: #f48fb1; }
   </style>
 </head>
-<body class="pink">
+<body>
 
 <div id="root"></div>
 
 <script type="text/babel">
   const { useState, useRef, useEffect } = React;
 
-  // ── EmailJS (оставь свои ключи) ────────────────────────────
+  // ⚠️ Твои данные EmailJS
   const EMAILJS_SERVICE_ID  = "service_q26zn0s";
   const EMAILJS_TEMPLATE_ID = "template_cnggbd6";
   const EMAILJS_PUBLIC_KEY  = "eOKft_HmrUTO0yAEp";
@@ -211,98 +200,79 @@
 
   emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
 
-  // ── Чтение параметров из URL ──────────────────────────────
+  // ─── Чтение параметров из URL ───────────────────────────────
   const urlParams = new URLSearchParams(window.location.search);
 
-  // Имя девушки
-  const girlName = urlParams.get('name') || '';
+  const urlName         = urlParams.get('name') || null;
+  const urlTitle        = urlParams.get('title') || 'Кое-что для тебя 💗';
+  const urlTheme        = urlParams.get('theme') || 'pink';
+  const urlPlacesRaw    = urlParams.get('places');
+  const urlPlaceEmojis  = urlParams.get('placeEmojis');
+  const urlFoodsRaw     = urlParams.get('foods');
+  const urlFoodEmojis   = urlParams.get('foodEmojis');
+  const urlNoPhrasesRaw = urlParams.get('noPhrases');
+  const urlPhraseMain   = urlParams.get('phraseMain');
+  const urlPhraseDate   = urlParams.get('phraseDate');
+  const urlPhrasePlaces = urlParams.get('phrasePlaces');
+  const urlPhraseFoods  = urlParams.get('phraseFoods');
+  const urlPhraseFinal  = urlParams.get('phraseFinal');
+  const urlPhraseCaprice = urlParams.get('phraseCaprice');
 
-  // Заголовок страницы
-  const customTitle = urlParams.get('title');
-  if (customTitle) {
-    document.title = customTitle;
-    document.querySelector('meta[property="og:title"]').setAttribute('content', customTitle);
+  // Установить заголовок страницы
+  document.title = urlTitle;
+  document.querySelector('meta[property="og:title"]')?.setAttribute('content', urlTitle);
+
+  // Тёмная тема
+  if (urlTheme === 'dark') {
+    document.body.classList.add('dark');
   }
 
-  // Тема
-  const theme = urlParams.get('theme') || 'pink';
-  document.body.className = theme; // 'pink' или 'dark'
-
-  // Фразы-комплименты
-  const phrases = {
-    main: urlParams.get('phraseMain') || 'default',
-    date: urlParams.get('phraseDate') || 'default',
-    places: urlParams.get('phrasePlaces') || 'default',
-    foods: urlParams.get('phraseFoods') || 'default',
-    final: urlParams.get('phraseFinal') || 'default',
-    caprice: urlParams.get('phraseCaprice') || 'default',
-  };
-  // Дефолтные тексты фраз (если не задано или 'default')
-  const DEFAULT_PHRASES = {
-    main: "С меня — всё. С тебя — хорошее настроение 💫",
-    date: "Выбирай любой день. Я подстроюсь 🌸",
-    places: "Куда захочешь. Мне главное — быть рядом 💗",
-    foods: "Ты заслуживаешь всё самое вкусное ✨",
-    final: "Просто будь красивой. Как всегда 💕",
-    caprice: "Если хочешь маленький сюрприз — шепни мне 👉",
-  };
-
-  function getPhrase(key) {
-    const val = phrases[key];
-    if (val === 'default' || !val) return DEFAULT_PHRASES[key];
-    return val;
-  }
-
-  // Места из URL
-  const placesParam = urlParams.get('places');
-  const placesEmojiParam = urlParams.get('placeEmojis');
+  // Дефолтные значения
   const DEFAULT_PLACES = [
-    { id: "cafe", emoji: "☕", label: "Уютное кафе", desc: "Тепло, вкусно и романтично" },
-    { id: "park", emoji: "🌿", label: "Прогулка в парке", desc: "Свежий воздух и красивые виды" },
-    { id: "theater", emoji: "🌊", label: "Набережная", desc: "Закат, волны и разговоры" },
-    { id: "cinema", emoji: "🎬", label: "Кино", desc: "Попкорн и хороший фильм" },
-    { id: "drive", emoji: "🚗", label: "Покататься на машинке", desc: "Музыка, ветер и ты" },
+    { id: "cafe",    emoji: "☕", label: "Уютное кафе",      desc: "Тепло, вкусно и романтично" },
+    { id: "park",    emoji: "🌿", label: "Прогулка в парке", desc: "Свежий воздух и красивые виды" },
+    { id: "theater", emoji: "🌊", label: "Набережная",       desc: "Закат, волны и разговоры" },
+    { id: "cinema",  emoji: "🎬", label: "Кино",             desc: "Попкорн и хороший фильм" },
+    { id: "drive",   emoji: "🚗", label: "Покататься на машинке", desc: "Музыка, ветер и ты" },
   ];
-  let PLACES = DEFAULT_PLACES;
-  if (placesParam) {
-    const labels = placesParam.split('|');
-    const emojis = placesEmojiParam ? placesEmojiParam.split('|') : [];
-    PLACES = labels.map((label, i) => ({
-      id: "custom" + i,
-      emoji: emojis[i] || "📍",
-      label: label,
-      desc: ""
-    }));
-  }
 
-  // Еда из URL
-  const foodsParam = urlParams.get('foods');
-  const foodsEmojiParam = urlParams.get('foodEmojis');
   const DEFAULT_FOODS = [
-    { id: "icecream", emoji: "🍦", label: "Мороженое", desc: "Сладкое и нежное" },
-    { id: "coffee", emoji: "☕", label: "Кофе с пирожным", desc: "Уютно и тепло" },
-    { id: "bun", emoji: "🥐", label: "Булочка из Ярче", desc: "Свежая выпечка" },
-    { id: "shaurma", emoji: "🌯", label: "Шаурма", desc: "Сочная и сытная" },
-    { id: "sushi", emoji: "🍣", label: "Суши / Роллы", desc: "Лёгкий ужин" },
-    { id: "blini", emoji: "🥞", label: "Сибирские блины", desc: "С мёдом и ягодой" },
-    { id: "pelmeni", emoji: "🥟", label: "Пельмени", desc: "По-томски, с пылу с жару" },
+    { id: "icecream", emoji: "🍦", label: "Мороженое",       desc: "Сладкое и нежное" },
+    { id: "coffee",   emoji: "☕", label: "Кофе с пирожным",  desc: "Уютно и тепло" },
+    { id: "bun",      emoji: "🥐", label: "Булочка из Ярче",  desc: "Свежая выпечка" },
+    { id: "shaurma",  emoji: "🌯", label: "Шаурма",           desc: "Сочная и сытная" },
+    { id: "sushi",    emoji: "🍣", label: "Суши / Роллы",     desc: "Лёгкий ужин" },
+    { id: "blini",    emoji: "🥞", label: "Сибирские блины",   desc: "С мёдом и ягодой" },
+    { id: "pelmeni",  emoji: "🥟", label: "Пельмени",         desc: "По-томски, с пылу с жару" },
   ];
-  let FOODS = DEFAULT_FOODS;
-  if (foodsParam) {
-    const labels = foodsParam.split('|');
-    const emojis = foodsEmojiParam ? foodsEmojiParam.split('|') : [];
-    FOODS = labels.map((label, i) => ({
-      id: "custom" + i,
-      emoji: emojis[i] || "🍽️",
+
+  const DEFAULT_NO_PHRASES = ["Неа!", "Не поймаешь!", "Хахаха нет", "Попробуй ещё!", "Лови меня~", "Нееет!"];
+
+  // Парсим кастомные места/еду из URL
+  function parseCustomItems(rawLabels, rawEmojis, defaults) {
+    if (!rawLabels) return defaults;
+    const labels = rawLabels.split('|');
+    const emojis = rawEmojis ? rawEmojis.split('|') : [];
+    return labels.map((label, i) => ({
+      id: "custom_" + i,
+      emoji: emojis[i] || "❤️",
       label: label,
       desc: ""
     }));
   }
 
-  // Фразы кнопки "Нет"
-  const noPhrasesParam = urlParams.get('noPhrases');
-  const DEFAULT_NO_MESSAGES = ["Нет 🙅‍♀️", "Неа!", "Не поймаешь!", "Хахаха нет", "Попробуй ещё!", "Лови меня~", "Нееет!"];
-  const noMessages = noPhrasesParam ? noPhrasesParam.split('|') : DEFAULT_NO_MESSAGES;
+  const urlNoPhrases = urlNoPhrasesRaw ? urlNoPhrasesRaw.split('|') : DEFAULT_NO_PHRASES;
+
+  const PLACES = parseCustomItems(urlPlacesRaw, urlPlaceEmojis, DEFAULT_PLACES);
+  const FOODS  = parseCustomItems(urlFoodsRaw, urlFoodEmojis, DEFAULT_FOODS);
+
+  // Комплименты
+  const PHRASE_MAIN   = urlPhraseMain   || "С меня — всё. С тебя — хорошее настроение 💫";
+  const PHRASE_DATE   = urlPhraseDate   || "Выбирай любой день. Я подстроюсь 🌸";
+  const PHRASE_PLACES = urlPhrasePlaces || "Куда захочешь. Мне главное — быть рядом 💗";
+  const PHRASE_FOODS  = urlPhraseFoods  || "Ты заслуживаешь всё самое вкусное ✨";
+  const PHRASE_FINAL  = urlPhraseFinal  || "Просто будь красивой. Как всегда 💕";
+  const PHRASE_CAPRICE = urlPhraseCaprice || "Если хочешь маленький сюрприз — шепни мне 👉";
 
   const HEARTS = ["💗", "💖", "💝", "💓", "🌸", "✨", "🎀"];
 
@@ -314,9 +284,9 @@
     const [time, setTime] = useState("");
     const [places, setPlaces] = useState([]);
     const [foods, setFoods] = useState([]);
+    const [caprice, setCaprice] = useState("");
     const [sending, setSending] = useState(false);
     const [hearts, setHearts] = useState([]);
-    const [caprice, setCaprice] = useState("");
     const containerRef = useRef(null);
 
     useEffect(() => { spawnHearts(5); }, [page]);
@@ -337,30 +307,35 @@
     function runAway() {
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const btnWidth = 140;
-      const btnHeight = 50;
-      const margin = 30;
+      const btnWidth = 160;
+      const btnHeight = 60;
+      const margin = 20;
       const maxX = viewportWidth - btnWidth - margin;
       const maxY = viewportHeight - btnHeight - margin;
-      const randomX = margin + Math.random() * maxX;
-      const randomY = margin + Math.random() * maxY;
+      const randomX = maxX > margin ? margin + Math.random() * maxX : viewportWidth / 2;
+      const randomY = maxY > margin ? margin + Math.random() * maxY : viewportHeight / 2;
+
       setNoPos({ x: randomX, y: randomY });
       setNoCount(c => c + 1);
     }
 
     async function handleFinish() {
-      const selectedPlaceLabels = places.map(id => PLACES.find(p => p.id === id)?.label).join(" + ");
-      const selectedFoodLabels = foods.map(id => FOODS.find(f => f.id === id)?.label).join(" + ");
-
+      const data = {
+        date,
+        time,
+        places: places.map(id => PLACES.find(p => p.id === id)?.label).join(" + "),
+        foods: foods.map(id => FOODS.find(f => f.id === id)?.label).join(" + "),
+        caprice: caprice || "Не указано",
+      };
       setSending(true);
       try {
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
           to_email: TO_EMAIL,
-          date: date,
-          time: time,
-          place: selectedPlaceLabels,
-          food: selectedFoodLabels,
-          caprice: caprice || "Не указано",
+          date: data.date,
+          time: data.time,
+          place: data.places,
+          food: data.foods,
+          caprice: data.caprice,
         });
       } catch (e) {
         console.error("Ошибка отправки:", e);
@@ -370,10 +345,18 @@
       setPage(4);
     }
 
-    const greeting = girlName ? `${girlName}, пойдёшь со мной на свидание?` : "Пойдёшь со мной на свидание?";
+    const noMessages = [
+      "Нет 🙅‍♀️",
+      ...urlNoPhrases,
+    ];
+
+    const isDark = urlTheme === 'dark';
+    const bgStyle = isDark
+      ? { background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f0f23 100%)" }
+      : { background: "linear-gradient(135deg, #fff0f5 0%, #fce4ec 40%, #f8bbd9 100%)" };
 
     return (
-      <div ref={containerRef} className="container">
+      <div ref={containerRef} className="container" style={bgStyle}>
         {hearts.map(h => (
           <div key={h.id} className="heart" style={{
             left: h.x, top: h.y, fontSize: h.size, opacity: h.opacity
@@ -385,9 +368,9 @@
           <div className="card">
             <div className="emoji-big">💌</div>
             <h1 style={{ fontSize: "clamp(28px, 6vw, 42px)", margin: "0 0 12px" }}>
-              {greeting}
+              {urlName ? `${urlName}, пойдёшь со мной на свидание?` : "Пойдёшь со мной на свидание?"}
             </h1>
-            <p className="subtitle">Подумай хорошенько ✨</p>
+            <p className="phrase">{PHRASE_MAIN}</p>
 
             <div style={{ display: "flex", gap: 20, justifyContent: "center", flexWrap: "wrap", minHeight: 80 }}>
               <button className="yes-btn" onClick={() => { spawnHearts(8); setPage(1); }}>
@@ -395,15 +378,23 @@
               </button>
 
               <button
+                className="no-btn"
                 style={noPos.x !== null ? {
                   position: "fixed",
                   left: noPos.x + "px",
                   top: noPos.y + "px",
-                  zIndex: 100,
+                  zIndex: 9999,
                   transform: "translate(-50%, -50%)",
-                  whiteSpace: "nowrap"
+                  whiteSpace: "nowrap",
+                  background: isDark ? "#1a1a2e" : "white",
+                  color: "#f48fb1",
+                  border: "2px solid #f48fb1",
+                  borderRadius: "50px",
+                  padding: "14px 32px",
+                  fontSize: "17px",
+                  cursor: "pointer",
+                  fontFamily: "Georgia, serif"
                 } : {}}
-                className={`no-btn`}
                 onMouseEnter={runAway}
                 onClick={runAway}
               >
@@ -416,7 +407,6 @@
                 Кнопка «Нет» не даётся… может, это знак? 😏
               </p>
             )}
-            <p className="phrase">{getPhrase('main')}</p>
           </div>
         )}
 
@@ -425,13 +415,12 @@
           <div className="card">
             <div className="emoji-med">🗓️</div>
             <h2 style={{ fontSize: 32, margin: "0 0 8px" }}>Когда тебе удобно?</h2>
-            <p className="subtitle">Выбери дату и время 🌸</p>
+            <p className="phrase">{PHRASE_DATE}</p>
             <div style={{ display: "flex", flexDirection: "column", gap: 16, alignItems: "center", marginBottom: 32 }}>
               <input type="date" value={date} onChange={e => setDate(e.target.value)}
                 min={new Date().toISOString().split("T")[0]} />
               <input type="time" value={time} onChange={e => setTime(e.target.value)} />
             </div>
-            <p className="phrase">{getPhrase('date')}</p>
             <button className="next-btn" disabled={!date || !time} onClick={() => setPage(2)}>
               Дальше →
             </button>
@@ -461,14 +450,14 @@
                     style={{ opacity: isDisabled ? 0.5 : 1, cursor: isDisabled ? "not-allowed" : "pointer" }}
                   >
                     <div style={{ fontSize: 32, marginBottom: 6 }}>{p.emoji}</div>
-                    <div style={{ fontSize: 15, fontWeight: 700 }}>{p.label}</div>
-                    {p.desc && <div style={{ fontSize: 12, marginTop: 4 }} className="phrase">{p.desc}</div>}
+                    <div style={{ fontSize: 15, color: isDark ? "#f06292" : "#880e4f", fontWeight: 700 }}>{p.label}</div>
+                    {p.desc && <div style={{ fontSize: 12, color: isDark ? "#bbb" : "#c2185b", marginTop: 4 }}>{p.desc}</div>}
                     {selected && <div style={{ marginTop: 6, color: "#e91e8c", fontSize: 18 }}>✅</div>}
                   </div>
                 );
               })}
             </div>
-            <p className="phrase">{getPhrase('places')}</p>
+            <p className="phrase">{PHRASE_PLACES}</p>
             <button className="next-btn" disabled={places.length === 0} onClick={() => setPage(3)}>
               Дальше →
             </button>
@@ -498,13 +487,13 @@
                     style={{ opacity: isDisabled ? 0.5 : 1, cursor: isDisabled ? "not-allowed" : "pointer" }}
                   >
                     <div style={{ fontSize: 36, marginBottom: 8 }}>{f.emoji}</div>
-                    <div style={{ fontSize: 15, fontWeight: 700 }}>{f.label}</div>
+                    <div style={{ fontSize: 15, color: isDark ? "#f06292" : "#880e4f", fontWeight: 700 }}>{f.label}</div>
                     {selected && <div style={{ marginTop: 6, color: "#e91e8c", fontSize: 18 }}>✅</div>}
                   </div>
                 );
               })}
             </div>
-            <p className="phrase">{getPhrase('foods')}</p>
+            <p className="phrase">{PHRASE_FOODS}</p>
             <button className="next-btn" disabled={foods.length === 0 || sending} onClick={handleFinish}>
               {sending ? "Отправляем... 💌" : "Готово! 💗"}
             </button>
@@ -518,40 +507,45 @@
             <h2 style={{ fontSize: "clamp(26px, 6vw, 38px)", margin: "0 0 16px" }}>
               Ура! Свидание<br />назначено 💗
             </h2>
+            <p className="phrase">{PHRASE_FINAL}</p>
             <div style={{
-              background: "white", borderRadius: 20, padding: 24, marginBottom: 24,
+              background: isDark ? "#1a1a2e" : "white",
+              borderRadius: 20, padding: 24, marginBottom: 24,
               boxShadow: "0 8px 32px rgba(233,30,140,0.12)", textAlign: "left"
             }}>
               <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
                 <span>📅</span>
-                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ДАТА</div><div style={{ fontSize: 17, color: "#880e4f", fontWeight: 700 }}>{date}</div></div>
+                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ДАТА</div><div style={{ fontSize: 17, color: isDark ? "#f06292" : "#880e4f", fontWeight: 700 }}>{date}</div></div>
               </div>
               <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
                 <span>⏰</span>
-                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ВРЕМЯ</div><div style={{ fontSize: 17, color: "#880e4f", fontWeight: 700 }}>{time}</div></div>
+                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ВРЕМЯ</div><div style={{ fontSize: 17, color: isDark ? "#f06292" : "#880e4f", fontWeight: 700 }}>{time}</div></div>
               </div>
               <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
                 <span>📍</span>
-                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>МЕСТА</div><div style={{ fontSize: 17, color: "#880e4f", fontWeight: 700 }}>{places.map(id => PLACES.find(p => p.id === id)?.label).join(" + ")}</div></div>
+                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>МЕСТА</div><div style={{ fontSize: 17, color: isDark ? "#f06292" : "#880e4f", fontWeight: 700 }}>{places.map(id => PLACES.find(p => p.id === id)?.label).join(" + ") || "—"}</div></div>
               </div>
               <div style={{ display: "flex", gap: 12, marginBottom: 12 }}>
                 <span>🍽️</span>
-                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ЕДА</div><div style={{ fontSize: 17, color: "#880e4f", fontWeight: 700 }}>{foods.map(id => FOODS.find(f => f.id === id)?.label).join(" + ")}</div></div>
+                <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ЕДА</div><div style={{ fontSize: 17, color: isDark ? "#f06292" : "#880e4f", fontWeight: 700 }}>{foods.map(id => FOODS.find(f => f.id === id)?.label).join(" + ") || "—"}</div></div>
               </div>
             </div>
 
-            {/* Блок каприза */}
-            <p className="phrase">{getPhrase('caprice')}</p>
+            {/* Каприз */}
+            <p style={{ color: isDark ? "#f06292" : "#c2185b", fontSize: 14, fontStyle: "italic", marginBottom: 8 }}>
+              {PHRASE_CAPRICE}
+            </p>
             <input
               type="text"
               value={caprice}
               onChange={e => setCaprice(e.target.value)}
-              placeholder="Напиши что-нибудь..."
-              style={{ marginBottom: 16 }}
+              placeholder="Шоколадку... или что-то ещё 😏"
+              style={{ marginBottom: 20 }}
             />
 
-            <p className="phrase">{getPhrase('final')}</p>
-            <p style={{ color: "#c2185b", fontSize: 15 }}>Я за тобой заеду! 🚗💨</p>
+            <p style={{ color: isDark ? "#f06292" : "#c2185b", fontSize: 15, marginTop: 16 }}>
+              Я за тобой заеду! 🚗💨
+            </p>
           </div>
         )}
       </div>
