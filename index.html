@@ -267,11 +267,11 @@
   const FOODS  = parseCustomItems(urlFoodsRaw, urlFoodEmojis, DEFAULT_FOODS);
 
   // Комплименты
-  const PHRASE_MAIN   = urlPhraseMain   || "С меня — всё. С тебя — хорошее настроение 💫";
-  const PHRASE_DATE   = urlPhraseDate   || "Выбирай любой день. Я подстроюсь 🌸";
-  const PHRASE_PLACES = urlPhrasePlaces || "Куда захочешь. Мне главное — быть рядом 💗";
-  const PHRASE_FOODS  = urlPhraseFoods  || "Ты заслуживаешь всё самое вкусное ✨";
-  const PHRASE_FINAL  = urlPhraseFinal  || "Просто будь красивой. Как всегда 💕";
+  const PHRASE_MAIN    = urlPhraseMain   || "С меня — всё. С тебя — хорошее настроение 💫";
+  const PHRASE_DATE    = urlPhraseDate   || "Выбирай любой день. Я подстроюсь 🌸";
+  const PHRASE_PLACES  = urlPhrasePlaces || "Куда захочешь. Мне главное — быть рядом 💗";
+  const PHRASE_FOODS   = urlPhraseFoods  || "Ты заслуживаешь всё самое вкусное ✨";
+  const PHRASE_FINAL   = urlPhraseFinal  || "Просто будь красивой. Как всегда 💕";
   const PHRASE_CAPRICE = urlPhraseCaprice || "Если хочешь маленький сюрприз — шепни мне 👉";
 
   const HEARTS = ["💗", "💖", "💝", "💓", "🌸", "✨", "🎀"];
@@ -464,7 +464,7 @@
           </div>
         )}
 
-        {/* PAGE 3 - Еда */}
+        {/* PAGE 3 - Еда + Каприз */}
         {page === 3 && (
           <div className="card">
             <div className="emoji-med">🍽️</div>
@@ -494,6 +494,19 @@
               })}
             </div>
             <p className="phrase">{PHRASE_FOODS}</p>
+
+            {/* Каприз — перед отправкой */}
+            <p style={{ color: isDark ? "#f06292" : "#c2185b", fontSize: 14, fontStyle: "italic", marginBottom: 8, marginTop: 8 }}>
+              {PHRASE_CAPRICE}
+            </p>
+            <input
+              type="text"
+              value={caprice}
+              onChange={e => setCaprice(e.target.value)}
+              placeholder="Шоколадку... или что-то ещё 😏"
+              style={{ marginBottom: 24 }}
+            />
+
             <button className="next-btn" disabled={foods.length === 0 || sending} onClick={handleFinish}>
               {sending ? "Отправляем... 💌" : "Готово! 💗"}
             </button>
@@ -529,21 +542,15 @@
                 <span>🍽️</span>
                 <div><div style={{ fontSize: 12, color: "#f48fb1" }}>ЕДА</div><div style={{ fontSize: 17, color: isDark ? "#f06292" : "#880e4f", fontWeight: 700 }}>{foods.map(id => FOODS.find(f => f.id === id)?.label).join(" + ") || "—"}</div></div>
               </div>
+              {caprice && (
+                <div style={{ display: "flex", gap: 12 }}>
+                  <span>🎁</span>
+                  <div><div style={{ fontSize: 12, color: "#f48fb1" }}>КАПРИЗ</div><div style={{ fontSize: 17, color: isDark ? "#f06292" : "#880e4f", fontWeight: 700 }}>{caprice}</div></div>
+                </div>
+              )}
             </div>
 
-            {/* Каприз */}
-            <p style={{ color: isDark ? "#f06292" : "#c2185b", fontSize: 14, fontStyle: "italic", marginBottom: 8 }}>
-              {PHRASE_CAPRICE}
-            </p>
-            <input
-              type="text"
-              value={caprice}
-              onChange={e => setCaprice(e.target.value)}
-              placeholder="Шоколадку... или что-то ещё 😏"
-              style={{ marginBottom: 20 }}
-            />
-
-            <p style={{ color: isDark ? "#f06292" : "#c2185b", fontSize: 15, marginTop: 16 }}>
+            <p style={{ color: isDark ? "#f06292" : "#c2185b", fontSize: 15 }}>
               Я за тобой заеду! 🚗💨
             </p>
           </div>
