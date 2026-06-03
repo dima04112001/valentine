@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конструктор свиданий 🔧</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Georgia, serif;
+      background: #1a1a2e;
+      color: #eee;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+      background: #16213e;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    h1 {
+      text-align: center;
+      color: #e91e8c;
+      font-style: italic;
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .section {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #333;
+    }
+    .section h2 {
+      color: #f06292;
+      font-size: 18px;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+    label {
+      display: block;
+      color: #ccc;
+      font-size: 13px;
+      margin-bottom: 4px;
+      margin-top: 10px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #0f0f23;
+      color: #eee;
+      font-size: 15px;
+      font-family: Georgia, serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    input:focus, select:focus {
+      border-color: #e91e8c;
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .row .emoji-input {
+      width: 60px;
+      text-align: center;
+      font-size: 22px;
+    }
+    .row .name-input {
+      flex: 1;
+    }
+    .row .delete-btn {
+      background: none;
+      border: none;
+      color: #f06292;
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+    .delete-btn:hover { opacity: 1; }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 14px 24px;
+      border-radius: 50px;
+      border: none;
+      font-size: 16px;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-style: italic;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #e91e8c, #f06292);
+      color: white;
+      flex: 1;
+      min-width: 200px;
+    }
+    .btn-primary:hover { transform: scale(1.03); }
+    .btn-secondary {
+      background: #333;
+      color: #eee;
+    }
+    .btn-secondary:hover { background: #444; }
+    .btn-danger {
+      background: transparent;
+      color: #f06292;
+      border: 1px solid #f06292;
+    }
+    .btn-danger:hover { background: #f06292; color: white; }
+    .result {
+      background: #0f0f23;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid #4caf50;
+      display: none;
+    }
+    .result.show { display: block; }
+    .result h3 {
+      color: #4caf50;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    .result input {
+      background: #1a1a2e;
+      border: 1px solid #4caf50;
+      color: #4caf50;
+      font-size: 13px;
+      word-break: break-all;
+    }
+    .copied {
+      color: #4caf50;
+      font-size: 12px;
+      margin-top: 6px;
+      display: none;
+    }
+    .copied.show { display: block; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>💗 Конструктор свиданий</h1>
+  <p class="subtitle">Настрой сайт под девушку и получи ссылку</p>
+
+  <!-- 👤 Основное -->
+  <div class="section">
+    <h2>👤 Основное</h2>
+    <label>Имя девушки (оставь пустым — будет без имени)</label>
+    <input type="text" id="girlName" placeholder="Например: Катя">
+
+    <label>Заголовок страницы (вкладка браузера и превью в чате)</label>
+    <input type="text" id="pageTitle" value="Кое-что для тебя 💗">
+
+    <label>Тема оформления</label>
+    <select id="theme">
+      <option value="pink">🌸 Розовая</option>
+      <option value="dark">🌙 Тёмная</option>
+    </select>
+  </div>
+
+  <!-- 💬 Комплименты -->
+  <div class="section">
+    <h2>💬 Комплименты</h2>
+
+    <label>На главной (под вопросом)</label>
+    <select id="phraseMain" class="phrase-select">
+      <option value="default">С меня — всё. С тебя — хорошее настроение 💫</option>
+      <option value="Ты — главное украшение этого вечера">Ты — главное украшение этого вечера</option>
+      <option value="Я всё организую. Ты просто приходи">Я всё организую. Ты просто приходи</option>
+      <option value="Твоя улыбка — всё, что мне нужно">Твоя улыбка — всё, что мне нужно</option>
+      <option value="custom">✨ Свой вариант...</option>
+    </select>
+    <input type="text" id="phraseMainCustom" placeholder="Введи свою фразу" style="display:none; margin-top:6px;">
+
+    <label>После выбора даты</label>
+    <select id="phraseDate" class="phrase-select">
+      <option value="default">Выбирай любой день. Я подстроюсь 🌸</option>
+      <option value="Твой график — мой график">Твой график — мой график</option>
+      <option value="В любой день, лишь бы с тобой">В любой день, лишь бы с тобой</option>
+      <option value="custom">✨ Свой вариант...</option>
+    </select>
+    <input type="text" id="phraseDateCustom" placeholder="Введи свою фразу" style="display:none; margin-top:6px;">
+
+    <label>После выбора мест</label>
+    <select id="phrasePlaces" class="phrase-select">
+      <option value="default">Куда захочешь. Мне главное — быть рядом 💗</option>
+      <option value="Твой выбор — закон. Мой — ты">Твой выбор — закон. Мой — ты</option>
+      <option value="Никаких условий. Только ты и я">Никаких условий. Только ты и я</option>
+      <option value="custom">✨ Свой вариант...</option>
+    </select>
+    <input type="text" id="phrasePlacesCustom" placeholder="Введи свою фразу" style="display:none; margin-top:6px;">
+
+    <label>После выбора еды</label>
+    <select id="phraseFoods" class="phrase-select">
+      <option value="default">Ты заслуживаешь всё самое вкусное ✨</option>
+      <option value="Твой выбор — закон. Мой — ты">Твой выбор — закон. Мой — ты</option>
+      <option value="Ты и так идеальна. Просто выбери вкусное">Ты и так идеальна. Просто выбери вкусное</option>
+      <option value="custom">✨ Свой вариант...</option>
+    </select>
+    <input type="text" id="phraseFoodsCustom" placeholder="Введи свою фразу" style="display:none; margin-top:6px;">
+
+    <label>На финале (перед «Я за тобой заеду»)</label>
+    <select id="phraseFinal" class="phrase-select">
+      <option value="default">Просто будь красивой. Как всегда 💕</option>
+      <option value="Ты и так идеальна. Я просто хочу быть рядом">Ты и так идеальна. Я просто хочу быть рядом</option>
+      <option value="Твоя улыбка — единственное, что мне нужно">Твоя улыбка — единственное, что мне нужно</option>
+      <option value="custom">✨ Свой вариант...</option>
+    </select>
+    <input type="text" id="phraseFinalCustom" placeholder="Введи свою фразу" style="display:none; margin-top:6px;">
+
+    <label>Над полем «Каприз»</label>
+    <select id="phraseCaprice" class="phrase-select">
+      <option value="default">Если хочешь маленький сюрприз — шепни мне 👉</option>
+      <option value="Хочешь что-то особенное? Шепни 😌">Хочешь что-то особенное? Шепни 😌</option>
+      <option value="Твой каприз — для меня закон">Твой каприз — для меня закон</option>
+      <option value="custom">✨ Свой вариант...</option>
+    </select>
+    <input type="text" id="phraseCapriceCustom" placeholder="Введи свою фразу" style="display:none; margin-top:6px;">
+  </div>
+
+  <!-- 📍 Места -->
+  <div class="section">
+    <h2>📍 Места (можно стереть или заменить)</h2>
+    <div id="placesContainer"></div>
+    <button class="btn btn-secondary" onclick="addPlace()" style="margin-top:10px;">+ Добавить место</button>
+  </div>
+
+  <!-- 🍽️ Еда -->
+  <div class="section">
+    <h2>🍽️ Еда (можно стереть или заменить)</h2>
+    <div id="foodsContainer"></div>
+    <button class="btn btn-secondary" onclick="addFood()" style="margin-top:10px;">+ Добавить блюдо</button>
+  </div>
+
+  <!-- 🙅‍♀️ Фразы «Нет» -->
+  <div class="section">
+    <h2>🙅‍♀️ Фразы для кнопки «Нет»</h2>
+    <div id="noPhrasesContainer"></div>
+    <button class="btn btn-secondary" onclick="addNoPhrase()" style="margin-top:10px;">+ Добавить фразу</button>
+  </div>
+
+  <!-- Кнопки -->
+  <div class="buttons">
+    <button class="btn btn-primary" onclick="generateLink()">🔗 Сгенерировать ссылку</button>
+    <button class="btn btn-secondary" onclick="saveJSON()">💾 Сохранить JSON</button>
+    <button class="btn btn-secondary" onclick="loadJSON()">📂 Загрузить JSON</button>
+    <button class="btn btn-danger" onclick="resetAll()">🔄 Сбросить</button>
+  </div>
+
+  <!-- Результат -->
+  <div class="result" id="result">
+    <h3>✅ Ссылка готова!</h3>
+    <input type="text" id="resultLink" readonly onclick="this.select()">
+    <p class="copied" id="copiedMsg">Скопировано! 📋</p>
+    <button class="btn btn-secondary" onclick="copyLink()" style="margin-top:10px;">📋 Копировать</button>
+  </div>
+</div>
+
+<script>
+  // Дефолтные значения
+  const DEFAULT_PLACES = [
+    { emoji: "☕", label: "Уютное кафе" },
+    { emoji: "🌿", label: "Прогулка в парке" },
+    { emoji: "🌊", label: "Набережная" },
+    { emoji: "🎬", label: "Кино" },
+    { emoji: "🚗", label: "Покататься на машинке" }
+  ];
+
+  const DEFAULT_FOODS = [
+    { emoji: "🍦", label: "Мороженое" },
+    { emoji: "☕", label: "Кофе с пирожным" },
+    { emoji: "🥐", label: "Булочка из Ярче" },
+    { emoji: "🌯", label: "Шаурма" },
+    { emoji: "🍣", label: "Суши / Роллы" },
+    { emoji: "🥞", label: "Сибирские блины" },
+    { emoji: "🥟", label: "Пельмени" }
+  ];
+
+  const DEFAULT_NO_PHRASES = [
+    "Нет 🙅‍♀️", "Неа!", "Не поймаешь!", "Хахаха нет", "Попробуй ещё!", "Лови меня~", "Нееет!"
+  ];
+
+  // Инициализация
+  function init() {
+    // Загружаем из localStorage или используем дефолт
+    const saved = JSON.parse(localStorage.getItem('dateConstructor') || 'null');
+    
+    if (saved) {
+      document.getElementById('girlName').value = saved.girlName || '';
+      document.getElementById('pageTitle').value = saved.pageTitle || 'Кое-что для тебя 💗';
+      document.getElementById('theme').value = saved.theme || 'pink';
+      renderItems('placesContainer', saved.places || DEFAULT_PLACES, 'place');
+      renderItems('foodsContainer', saved.foods || DEFAULT_FOODS, 'food');
+      renderNoPhrases(saved.noPhrases || DEFAULT_NO_PHRASES);
+      // Восстановить комплименты
+      if (saved.phrases) {
+        Object.keys(saved.phrases).forEach(key => {
+          const el = document.getElementById('phrase' + key.charAt(0).toUpperCase() + key.slice(1));
+          if (el) el.value = saved.phrases[key];
+        });
+      }
+    } else {
+      document.getElementById('pageTitle').value = 'Кое-что для тебя 💗';
+      document.getElementById('theme').value = 'pink';
+      renderItems('placesContainer', DEFAULT_PLACES, 'place');
+      renderItems('foodsContainer', DEFAULT_FOODS, 'food');
+      renderNoPhrases(DEFAULT_NO_PHRASES);
+    }
+  }
+
+  function renderItems(containerId, items, prefix) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    items.forEach((item, index) => {
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `
+        <input type="text" class="emoji-input" value="${item.emoji}" data-index="${index}" data-prefix="${prefix}" data-field="emoji" placeholder="😀">
+        <input type="text" class="name-input" value="${item.label}" data-index="${index}" data-prefix="${prefix}" data-field="label" placeholder="Название">
+        <button class="delete-btn" onclick="deleteItem('${containerId}', ${index}, '${prefix}')" title="Удалить">✕</button>
+      `;
+      container.appendChild(row);
+    });
+    // Сохраняем в localStorage
+    autoSave();
+  }
+
+  function addPlace() {
+    const container = document.getElementById('placesContainer');
+    const items = getItems('placesContainer');
+    items.push({ emoji: "❤️", label: "" });
+    renderItems('placesContainer', items, 'place');
+    // Фокус на новое поле
+    const lastLabel = container.querySelectorAll('.name-input');
+    lastLabel[lastLabel.length - 1].focus();
+  }
+
+  function addFood() {
+    const container = document.getElementById('foodsContainer');
+    const items = getItems('foodsContainer');
+    items.push({ emoji: "❤️", label: "" });
+    renderItems('foodsContainer', items, 'food');
+    const lastLabel = container.querySelectorAll('.name-input');
+    lastLabel[lastLabel.length - 1].focus();
+  }
+
+  function deleteItem(containerId, index, prefix) {
+    const items = getItems(containerId);
+    items.splice(index, 1);
+    renderItems(containerId, items, prefix);
+  }
+
+  function getItems(containerId) {
+    const container = document.getElementById(containerId);
+    const rows = container.querySelectorAll('.row');
+    const items = [];
+    rows.forEach(row => {
+      const emojiInput = row.querySelector('.emoji-input');
+      const labelInput = row.querySelector('.name-input');
+      items.push({
+        emoji: emojiInput ? emojiInput.value : "❤️",
+        label: labelInput ? labelInput.value : ""
+      });
+    });
+    return items;
+  }
+
+  function renderNoPhrases(phrases) {
+    const container = document.getElementById('noPhrasesContainer');
+    container.innerHTML = '';
+    phrases.forEach((phrase, index) => {
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `
+        <input type="text" class="name-input" value="${phrase}" data-index="${index}" data-prefix="noPhrase" placeholder="Фраза для кнопки Нет">
+        <button class="delete-btn" onclick="deleteNoPhrase(${index})" title="Удалить">✕</button>
+      `;
+      container.appendChild(row);
+    });
+  }
+
+  function addNoPhrase() {
+    const container = document.getElementById('noPhrasesContainer');
+    const phrases = getNoPhrases();
+    phrases.push("");
+    renderNoPhrases(phrases);
+    const inputs = container.querySelectorAll('input');
+    inputs[inputs.length - 1].focus();
+  }
+
+  function deleteNoPhrase(index) {
+    const phrases = getNoPhrases();
+    phrases.splice(index, 1);
+    renderNoPhrases(phrases);
+  }
+
+  function getNoPhrases() {
+    const container = document.getElementById('noPhrasesContainer');
+    const inputs = container.querySelectorAll('input');
+    return Array.from(inputs).map(i => i.value).filter(v => v.trim() !== '');
+  }
+
+  function getPhraseValue(selectId, customInputId) {
+    const select = document.getElementById(selectId);
+    if (select.value === 'custom') {
+      return document.getElementById(customInputId).value || '';
+    }
+    if (select.value === 'default') return 'default';
+    return select.value;
+  }
+
+  function autoSave() {
+    const data = collectData();
+    localStorage.setItem('dateConstructor', JSON.stringify(data));
+  }
+
+  function collectData() {
+    return {
+      girlName: document.getElementById('girlName').value,
+      pageTitle: document.getElementById('pageTitle').value,
+      theme: document.getElementById('theme').value,
+      phrases: {
+        main: getPhraseValue('phraseMain', 'phraseMainCustom'),
+        date: getPhraseValue('phraseDate', 'phraseDateCustom'),
+        places: getPhraseValue('phrasePlaces', 'phrasePlacesCustom'),
+        foods: getPhraseValue('phraseFoods', 'phraseFoodsCustom'),
+        final: getPhraseValue('phraseFinal', 'phraseFinalCustom'),
+        caprice: getPhraseValue('phraseCaprice', 'phraseCapriceCustom')
+      },
+      places: getItems('placesContainer').filter(p => p.label.trim() !== ''),
+      foods: getItems('foodsContainer').filter(f => f.label.trim() !== ''),
+      noPhrases: getNoPhrases()
+    };
+  }
+
+  function generateLink() {
+    const data = collectData();
+    const baseUrl = window.location.origin + window.location.pathname.replace('constructor.html', '');
+    
+    const params = new URLSearchParams();
+    if (data.girlName) params.set('name', data.girlName);
+    if (data.pageTitle) params.set('title', data.pageTitle);
+    if (data.theme !== 'pink') params.set('theme', data.theme);
+    
+    // Места
+    const placeLabels = data.places.map(p => p.label);
+    const placeEmojis = data.places.map(p => p.emoji);
+    if (placeLabels.length > 0 && placeLabels[0] !== DEFAULT_PLACES[0].label) {
+      params.set('places', placeLabels.join('|'));
+      params.set('placeEmojis', placeEmojis.join('|'));
+    }
+    
+    // Еда
+    const foodLabels = data.foods.map(f => f.label);
+    const foodEmojis = data.foods.map(f => f.emoji);
+    if (foodLabels.length > 0 && foodLabels[0] !== DEFAULT_FOODS[0].label) {
+      params.set('foods', foodLabels.join('|'));
+      params.set('foodEmojis', foodEmojis.join('|'));
+    }
+    
+    // Фразы «Нет»
+    if (data.noPhrases.length > 0 && data.noPhrases.join(',') !== DEFAULT_NO_PHRASES.join(',')) {
+      params.set('noPhrases', data.noPhrases.join('|'));
+    }
+    
+    // Комплименты
+    Object.keys(data.phrases).forEach(key => {
+      if (data.phrases[key] !== 'default' && data.phrases[key] !== '') {
+        params.set('phrase' + key.charAt(0).toUpperCase() + key.slice(1), data.phrases[key]);
+      }
+    });
+    
+    const queryString = params.toString();
+    const link = queryString ? baseUrl + '?' + queryString : baseUrl;
+    
+    document.getElementById('resultLink').value = link;
+    document.getElementById('result').classList.add('show');
+    document.getElementById('copiedMsg').classList.remove('show');
+    
+    // Скопировать автоматически
+    copyLink();
+    
+    // Сохранить
+    autoSave();
+  }
+
+  function copyLink() {
+    const input = document.getElementById('resultLink');
+    input.select();
+    navigator.clipboard.writeText(input.value).then(() => {
+      document.getElementById('copiedMsg').classList.add('show');
+    });
+  }
+
+  function saveJSON() {
+    const data = collectData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (data.girlName || 'default') + '_date.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function loadJSON() {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = (e) => {
+      const file = e.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const data = JSON.parse(event.target.result);
+          // Заполнить поля
+          document.getElementById('girlName').value = data.girlName || '';
+          document.getElementById('pageTitle').value = data.pageTitle || 'Кое-что для тебя 💗';
+          document.getElementById('theme').value = data.theme || 'pink';
+          
+          if (data.places) renderItems('placesContainer', data.places, 'place');
+          if (data.foods) renderItems('foodsContainer', data.foods, 'food');
+          if (data.noPhrases) renderNoPhrases(data.noPhrases);
+          
+          // Восстановить комплименты
+          if (data.phrases) {
+            Object.keys(data.phrases).forEach(key => {
+              const el = document.getElementById('phrase' + key.charAt(0).toUpperCase() + key.slice(1));
+              if (el && data.phrases[key] !== 'default') {
+                el.value = data.phrases[key];
+                el.dispatchEvent(new Event('change'));
+              }
+            });
+          }
+          
+          autoSave();
+          alert('✅ Настройки загружены!');
+        } catch (err) {
+          alert('❌ Ошибка: неверный формат файла');
+        }
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  }
+
+  function resetAll() {
+    if (confirm('Сбросить всё до стандартных настроек?')) {
+      localStorage.removeItem('dateConstructor');
+      document.getElementById('girlName').value = '';
+      document.getElementById('pageTitle').value = 'Кое-что для тебя 💗';
+      document.getElementById('theme').value = 'pink';
+      document.querySelectorAll('.phrase-select').forEach(s => s.value = 'default');
+      document.querySelectorAll('[id$="Custom"]').forEach(i => i.style.display = 'none');
+      renderItems('placesContainer', DEFAULT_PLACES, 'place');
+      renderItems('foodsContainer', DEFAULT_FOODS, 'food');
+      renderNoPhrases(DEFAULT_NO_PHRASES);
+    }
+  }
+
+  // Отслеживание выбора «свой вариант» в комплиментах
+  document.addEventListener('change', function(e) {
+    if (e.target.classList.contains('phrase-select')) {
+      const customId = e.target.id + 'Custom';
+      const customInput = document.getElementById(customId);
+      if (customInput) {
+        customInput.style.display = e.target.value === 'custom' ? 'block' : 'none';
+        if (e.target.value === 'custom') customInput.focus();
+      }
+      autoSave();
+    }
+  });
+
+  // Автосохранение при любом изменении
+  document.addEventListener('input', function(e) {
+    if (e.target.closest('.container')) {
+      autoSave();
+    }
+  });
+
+  // Запуск
+  init();
+</script>
+
+</body>
+</html>
